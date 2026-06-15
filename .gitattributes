@@ -1,4 +1,3 @@
-*.html linguist-documentation=true
-*.css linguist-documentation=true
-*.js linguist-documentation=true
-wwwroot/**/* linguist-vendored
+*.html linguist-language=C#
+*.css linguist-language=C#
+*.js linguist-language=C#
