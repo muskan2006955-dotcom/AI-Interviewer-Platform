@@ -1,0 +1,380 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AI Interviewer</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AI_Interviwer.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --layout-bg: #090d16;
+            --nav-bg: rgba(13, 14, 18, 0.85);
+            --nav-border: rgba(217, 70, 239, 0.15);
+            --pink-glow: #d946ef;
+            --purple-accent: #a855f7;
+            --text-bright: #ffffff;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #151026, var(--layout-bg)) !important;
+            color: var(--text-bright);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Modern Glassmorphic Pink-Purple Navbar */
+        .custom-navbar {
+            background: var(--nav-bg) !important;
+            border-bottom: 1px solid var(--nav-border) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 0;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(217, 70, 239, 0.05);
+        }
+
+        .navbar-brand-cyber {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff !important;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-icon {
+            color: var(--pink-glow);
+            text-shadow: 0 0 12px rgba(217, 70, 239, 0.6);
+        }
+
+        .brand-dot {
+            color: var(--purple-accent);
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+
+        .nav-link-cyber {
+            color: var(--text-dim) !important;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            padding: 6px 12px !important;
+        }
+
+            .nav-link-cyber:hover, .nav-link-cyber.active {
+                color: var(--pink-glow) !important;
+                text-shadow: 0 0 8px rgba(217, 70, 239, 0.4);
+            }
+
+        /* Auth Action Buttons Design */
+        .auth-buttons-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-cyber-login {
+            color: var(--text-bright);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            padding: 8px 18px;
+            transition: color 0.2s;
+        }
+
+            .btn-cyber-login:hover {
+                color: var(--pink-glow);
+                text-shadow: 0 0 8px rgba(217, 70, 239, 0.4);
+            }
+
+        .btn-cyber-signup {
+            background: rgba(217, 70, 239, 0.1);
+            color: var(--pink-glow) !important;
+            border: 1px solid rgba(217, 70, 239, 0.3);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+            .btn-cyber-signup:hover {
+                background: linear-gradient(135deg, var(--pink-glow), var(--purple-accent));
+                color: #ffffff !important;
+                box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
+                border-color: var(--pink-glow);
+            }
+
+        .btn-cyber-logout {
+            background: rgba(255, 74, 74, 0.1);
+            color: #ff4a4a !important;
+            border: 1px solid rgba(255, 74, 74, 0.3);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+            .btn-cyber-logout:hover {
+                background: #ff4a4a;
+                color: #ffffff !important;
+                box-shadow: 0 0 15px rgba(255, 74, 74, 0.4);
+                border-color: #ff4a4a;
+            }
+
+        /* Layout Content Box Wrapper */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+        }
+
+        /* Footer Alignment */
+        .custom-footer {
+            background: #05060a;
+            border-top: 1px solid var(--nav-border) !important;
+            color: var(--text-dim) !important;
+            padding: 20px 0;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+
+
+
+        /* ==========================================
+           🔮 ULTRA-SMOOTH 5-DOT WAVE LOADER STYLES
+           ========================================== */
+        #cyber-loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #090d16;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        /* Dots Flex Container */
+        .cyber-dots-wave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Dots ke beech ka gap */
+            margin-bottom: 25px;
+        }
+
+        /* Base Dot Design */
+        .cyber-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--pink-glow, #d946ef);
+            border-radius: 50%;
+            /* Double Glow Effect */
+            box-shadow: 0 0 12px var(--pink-glow, #d946ef), 0 0 25px var(--purple-accent, #a855f7);
+            /* Cubic-bezier for smooth velocity curves */
+            animation: cyberWaveDot 1.4s infinite cubic-bezier(0.445, 0.05, 0.55, 0.95);
+        }
+
+            /* 🌟 Delay sequence taake small to large wave effect banay */
+            .cyber-dot:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .cyber-dot:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+
+            .cyber-dot:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            .cyber-dot:nth-child(4) {
+                animation-delay: 0.45s;
+            }
+
+            .cyber-dot:nth-child(5) {
+                animation-delay: 0.6s;
+            }
+
+        /* Smooth Small to Large Scaling Animation Keyframes */
+        @@keyframes cyberWaveDot {
+            0%, 100%
+
+        {
+            transform: scale(0.6);
+            opacity: 0.3;
+        }
+
+        50% {
+            transform: scale(1.4); /* Dot grows large */
+            opacity: 1;
+            background-color: #ffffff; /* Peak par pure white flash */
+            box-shadow: 0 0 20px #ffffff, 0 0 40px var(--pink-glow, #d946ef);
+        }
+
+        }
+
+        .loader-text {
+            color: #ffffff;
+            font-family: monospace;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            animation: textBlink 1.4s infinite alternate;
+        }
+
+        @@keyframes textBlink {
+            0%
+
+        {
+            opacity: 0.4;
+        }
+
+        100% {
+            opacity: 0.9;
+        }
+
+        }
+
+        .loader-fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="cyber-loader-wrapper">
+        <div class="loader-content">
+            <div class="cyber-dots-wave">
+                <span class="cyber-dot"></span>
+                <span class="cyber-dot"></span>
+                <span class="cyber-dot"></span>
+                <span class="cyber-dot"></span>
+                <span class="cyber-dot"></span>
+            </div>
+            <div class="loader-text">CONNECTING TO NEURAL NETWORK...</div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark custom-navbar">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand navbar-brand-cyber" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-brain brand-icon"></i> AI_Interviwer<span class="brand-dot">.</span>
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-cyber" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                        @if (Context.Session.GetInt32("UserId") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-cyber" asp-area="" asp-controller="Home" asp-action="Dashboard">
+                                    <i class="fas fa-columns me-1"></i> Dashboard
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="auth-buttons-group">
+                        @if (Context.Session.GetInt32("UserId") != null)
+                        {
+                            <a asp-controller="Account" asp-action="Logout" class="btn-cyber-logout">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Signin" class="btn-cyber-login">
+                                <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                            </a>
+                            <a asp-controller="Account" asp-action="Signup" class="btn-cyber-signup">
+                                Sign Up <i class="fas fa-user-plus ms-1"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid main-content-wrapper">
+        <main role="main" class="pb-5">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="custom-footer text-muted">
+        <div class="container-fluid px-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                &copy; 2026 - <span class="text-white fw-bold">AI_Interviwer</span> Platform. All technical cores active.
+            </div>
+            <div>
+                <span class="text-dim"><i class="fas fa-code-branch text-pink"></i> v2.0.5</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<script>
+    // 1. Page load hone par loader ko delay ke sath hide karna
+    window.addEventListener("load", function () {
+        const loader = document.getElementById("cyber-loader-wrapper");
+        setTimeout(function() {
+            loader.classList.add("loader-fade-out");
+        }, 300);
+    });
+
+    // 2. Sirf links (Anchor Tags) par click karne se loader aayega
+    document.querySelectorAll('a:not([href^="#"]):not([target="_blank"])').forEach(element => {
+        element.addEventListener("click", function (e) {
+            if (this.getAttribute('href') === null || this.getAttribute('href') === '') return;
+
+            const loader = document.getElementById("cyber-loader-wrapper");
+            loader.classList.remove("loader-fade-out");
+        });
+    });
+
+    // 3. FIXED: Input click par nahi, balkay sirf jab FORM SUBMIT hoga tab loader chalega
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener("submit", function () {
+            const loader = document.getElementById("cyber-loader-wrapper");
+            loader.classList.remove("loader-fade-out");
+        });
+    });
+</script>

@@ -1,0 +1,399 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+    bool isLoggedIn = Context.Session.GetInt32("UserId") != null;
+}
+
+<div class="cyber-hero-section text-center">
+    <div class="container">
+        <div class="badge-accent mb-3"><i class="fas fa-bolt"></i> Next-Gen AI Interview Simulator</div>
+        <h1 class="hero-title">Crack The Code. <br><span class="neon-text-pink">Ace The Interview.</span></h1>
+        <p class="hero-subtitle mx-auto">
+            An advanced AI-powered platform that simulates real-time technical interviews. Evaluate your conceptual depth, optimize your coding implementation, and get instant analytics.
+        </p>
+        <div class="hero-cta-group mt-4">
+            @if (isLoggedIn)
+            {
+                <a asp-action="Dashboard" asp-controller="Home" class="btn-cyber-primary">
+                    <i class="fas fa-columns me-2"></i> Enter Live Dashboard
+                </a>
+            }
+            else
+            {
+                <a asp-action="Signup" asp-controller="Account" class="btn-cyber-primary">
+                    Start Interviewing Free <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+                <a asp-action="Signin" asp-controller="Account" class="btn-cyber-secondary">
+                    <i class="fas fa-sign-in-alt me-2"></i> Member Login
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="glass-stats-grid">
+        <div class="stat-box">
+            <div class="stat-number">10K+</div>
+            <div class="stat-label">Mock Interviews Conducted</div>
+        </div>
+        <div class="stat-box border-center">
+            <div class="stat-number">98.4%</div>
+            <div class="stat-label">AI Evaluation Accuracy</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">&lt; 5s</div>
+            <div class="stat-label">Instant Report Generation</div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 py-4">
+    <h2 class="section-main-title text-center mb-5">How The Simulator <span class="neon-text-purple">Works</span></h2>
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-feature-card step-card">
+                <div class="step-num">01</div>
+                <div class="icon-wrapper purple"><i class="fas fa-sliders-h"></i></div>
+                <h4>Configure Stack</h4>
+                <p>Choose your tech role (e.g., Junior .NET Developer), seniority levels, and language focuses before initiating the terminal session.</p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-feature-card step-card">
+                <div class="step-num">02</div>
+                <div class="icon-wrapper pink"><i class="fas fa-terminal"></i></div>
+                <h4>Face The AI Terminal</h4>
+                <p>Solve tricky conceptual prompts and script complex functional logic directly inside our sandboxed browser code editor views.</p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-feature-card step-card">
+                <div class="step-num">03</div>
+                <div class="icon-wrapper cyan"><i class="fas fa-chart-pie"></i></div>
+                <h4>Get Neural Metrics</h4>
+                <p>Receive an exhaustive performance trace scoring your syntax, structural efficiency, criteria benchmarks, and descriptive feedback.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 py-4">
+    <h2 class="section-main-title text-center mb-5">Engineered For <span class="neon-text-pink">Technical Growth</span></h2>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-feature-card h-100">
+                <div class="feature-icon mb-3"><i class="fas fa-robot text-pink"></i></div>
+                <h5>Real-Time Evaluation</h5>
+                <p>Our fine-tuned system parses your conceptual language logs instantly to point out edge-case logic faults and missing criteria blocks.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-feature-card h-100">
+                <div class="feature-icon mb-3"><i class="fas fa-code text-purple"></i></div>
+                <h5>Integrated Cloud IDE</h5>
+                <p>Type out algorithms and functions effortlessly without leaving your browser environment. Optimized with customized code outputs.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-feature-card h-100">
+                <div class="feature-icon mb-3"><i class="fas fa-history text-cyan"></i></div>
+                <h5>Persistent Analytics Trace</h5>
+                <p>Track every historical run cleanly from your session manager logs. Review metrics scores, clear logs, and re-attempt old setups.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5 text-center">
+    <div class="glass-panel-cta py-5 px-4 position-relative overflow-hidden">
+        <h2 class="fw-bold text-white mb-3">Ready To Dominate Your Next Technical Interview?</h2>
+        <p class="text-dim mx-auto max-w-600 mb-4">
+            Don't leave your programming career benchmarks to random luck. Fine-tune your developer profile logic grids under high-pressure parameters today.
+        </p>
+        @if (isLoggedIn)
+        {
+            <a asp-action="Dashboard" asp-controller="Home" class="btn-cyber-primary px-5">
+                Go to Dashboard <i class="fas fa-bolt ms-2"></i>
+            </a>
+        }
+        else
+        {
+            <a asp-action="Signup" asp-controller="Account" class="btn-cyber-primary px-5">
+                Launch First Session Now <i class="fas fa-user-plus ms-2"></i>
+            </a>
+        }
+    </div>
+</div>
+
+<style>
+    :root {
+        --cyber-bg: #090d16;
+        --glass-bg: rgba(13, 14, 18, 0.85);
+        --glass-border: rgba(217, 70, 239, 0.15);
+        --pink-glow: #d946ef;
+        --purple-accent: #a855f7;
+        --cyan-accent: #06b6d4;
+        --text-bright: #ffffff;
+        --text-dim: #94a3b8;
+    }
+
+    /* Hero Metrics */
+    .cyber-hero-section {
+        padding: 100px 0 60px 0;
+        background: radial-gradient(circle at 50% 30%, rgba(217, 70, 239, 0.1), transparent 60%);
+    }
+
+    .badge-accent {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(217, 70, 239, 0.1);
+        border: 1px solid rgba(217, 70, 239, 0.3);
+        color: #f472b6;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 6px 14px;
+        border-radius: 30px;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1.2;
+        color: var(--text-bright);
+    }
+
+    .hero-subtitle {
+        font-size: 1.15rem;
+        color: var(--text-dim);
+        max-width: 700px;
+        line-height: 1.6;
+        margin-top: 20px;
+    }
+
+    .neon-text-pink {
+        color: var(--pink-glow);
+        text-shadow: 0 0 20px rgba(217, 70, 239, 0.5);
+    }
+
+    .neon-text-purple {
+        color: #c084fc;
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+
+    /* Core Action Buttons */
+    .btn-cyber-primary {
+        background: linear-gradient(135deg, var(--pink-glow), var(--purple-accent));
+        color: #ffffff !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.88rem;
+        letter-spacing: 0.5px;
+        padding: 14px 28px;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 0 20px rgba(217, 70, 239, 0.4);
+        transition: all 0.25s ease;
+    }
+
+        .btn-cyber-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(217, 70, 239, 0.6);
+        }
+
+    .btn-cyber-secondary {
+        background: rgba(255, 255, 255, 0.03);
+        color: #ffffff !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.88rem;
+        letter-spacing: 0.5px;
+        padding: 14px 28px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 14px;
+        transition: all 0.25s ease;
+    }
+
+        .btn-cyber-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+    /* Live Stat Bar Config */
+    .glass-stats-grid {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 24px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        text-center: center;
+    }
+
+    .stat-box {
+        text-align: center;
+    }
+
+        .stat-box.border-center {
+            border-left: 1px solid rgba(217, 70, 239, 0.15);
+            border-right: 1px solid rgba(217, 70, 239, 0.15);
+        }
+
+    .stat-number {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-bright);
+        background: linear-gradient(to right, #fff, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 4px;
+    }
+
+    /* Glass Feature Cards System */
+    .section-main-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .glass-feature-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        padding: 30px 24px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .glass-feature-card:hover {
+            border-color: rgba(217, 70, 239, 0.35);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(217, 70, 239, 0.15);
+            transform: translateY(-4px);
+        }
+
+    .step-card {
+        padding-top: 45px;
+    }
+
+    .step-num {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.03);
+        font-family: monospace;
+    }
+
+    .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-bottom: 20px;
+    }
+
+        .icon-wrapper.purple {
+            background: rgba(168, 85, 247, 0.1);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .icon-wrapper.pink {
+            background: rgba(217, 70, 239, 0.1);
+            color: #f472b6;
+            border: 1px solid rgba(217, 70, 239, 0.3);
+        }
+
+        .icon-wrapper.cyan {
+            background: rgba(6, 182, 212, 0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+    .feature-icon {
+        font-size: 1.8rem;
+    }
+
+    .glass-feature-card h4, .glass-feature-card h5 {
+        font-weight: 700;
+        color: var(--text-bright);
+        margin-bottom: 12px;
+    }
+
+    .glass-feature-card p {
+        font-size: 0.92rem;
+        color: var(--text-dim);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Footer Banner Box */
+    .glass-panel-cta {
+        background: linear-gradient(135deg, rgba(13, 14, 18, 0.95), rgba(9, 13, 22, 0.95));
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 30px rgba(217, 70, 239, 0.05);
+        border-top: 3px solid var(--pink-glow);
+    }
+
+    .max-w-600 {
+        max-width: 600px;
+    }
+
+    /* Responsive Queries */
+    @@media (max-width: 768px) {
+        .hero-title
+
+    {
+        font-size: 2.5rem;
+    }
+
+    .glass-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .stat-box.border-center {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid rgba(217, 70, 239, 0.15);
+        border-bottom: 1px solid rgba(217, 70, 239, 0.15);
+        padding: 15px 0;
+    }
+
+    .btn-cyber-secondary {
+        margin-left: 0;
+        margin-top: 12px;
+        display: block;
+    }
+
+    .btn-cyber-primary {
+        display: block;
+        width: 100%;
+    }
+
+    }
+</style>
+

@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Login to AI Interviewer";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="card p-4 text-white" style="background-color: #0d0e12; border: 1px solid #d946ef; width: 420px; box-shadow: 0 0 20px rgba(217, 70, 239, 0.25); border-radius: 12px;">
+        <h3 class="text-center mb-2" style="color: #d946ef; font-weight: 700;">Welcome Back 🤖</h3>
+        <p class="text-center text-muted small mb-4">Log in to continue your session</p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success bg-dark text-success border-success p-2 small text-center">@TempData["Success"]</div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger bg-dark text-danger border-danger p-2 small text-center">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Signin" method="post">
+            <div class="mb-3">
+                <label class="form-label small text-muted">Email Address</label>
+                <input type="email" name="email" class="form-control bg-dark text-white border-secondary" required placeholder="name@example.com" style="border-radius: 6px;" />
+            </div>
+            <div class="mb-4">
+                <label class="form-label small text-muted">Password</label>
+                <input type="password" name="password" class="form-control bg-dark text-white border-secondary" required placeholder="••••••" style="border-radius: 6px;" />
+            </div>
+            <button type="submit" class="btn w-100 fw-bold text-white shadow-sm" style="background-color: #d946ef; border-radius: 6px; transition: 0.3s;">Sign In</button>
+        </form>
+        <p class="text-center mt-3 small text-muted mb-0">If you dont have Account? <a asp-action="Signup" style="color: #06b6d4; text-decoration: none;">please first make account</a></p>
+    </div>
+</div>

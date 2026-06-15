@@ -1,0 +1,476 @@
+﻿@{
+    ViewData["Title"] = "Live AI Interview Session";
+}
+
+<div class="interview-live-wrapper">
+    <!-- Top Stats Monitor Bar -->
+    <div class="glass-panel monitor-top-bar">
+        <div class="d-flex align-items-center">
+            <div class="pulse-indicator me-3"></div>
+            <div>
+                <h4 class="mb-0 fw-bold system-title">AI Interviewer Core Active 🤖</h4>
+                <p class="mb-0 system-subtitle">Do not refresh the page during the live technical evaluation pipeline.</p>
+            </div>
+        </div>
+        <div id="badgeContainer">
+            <span class="badge bg-dark-pink text-pink question-counter-badge">Initializing Engine...</span>
+        </div>
+    </div>
+
+    <div class="interview-split-grid">
+
+        <!-- Left Panels Flow -->
+        <div class="grid-column left-panel-flow">
+            <div class="glass-panel question-viewer">
+                <label class="panel-section-tag"><i class="fas fa-terminal"></i> Active Prompt</label>
+                <div id="questionBox" class="question-live-text">
+                    <span class="text-glow-muted">Wait for Your Interview Question... 🧠⏳</span>
+                </div>
+            </div>
+
+            <div class="glass-panel text-input-viewer">
+                <label class="panel-section-tag"><i class="fas fa-file-alt"></i> 📝 Conceptual Text Explanation</label>
+                <p class="tag-description">Describe your architectural logic, database structure, or theoretical concept here.</p>
+                <textarea id="userAnswer" class="custom-glass-textarea" placeholder="Apna conceptual jawab yahan tafseel se likhein (Optional agar aap code likh rahe hain)..."></textarea>
+            </div>
+        </div>
+
+        <!-- Right Side Editor Panel -->
+        <div class="grid-column right-panel-flow">
+            <div class="glass-panel editor-window-panel">
+                <div class="editor-top-mac-bar">
+                    <div class="mac-dots">
+                        <span class="mac-dot red"></span>
+                        <span class="mac-dot yellow"></span>
+                        <span class="mac-dot green"></span>
+                    </div>
+                    <span class="editor-file-tab"><i class="fas fa-code text-pink"></i> interview_solution.cs</span>
+                </div>
+                <div class="editor-body-wrapper">
+                    <div id="monacoEditorContainer"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Action Footer -->
+    <div class="action-footer-panel">
+        <div class="helper-text-tip">
+            <i class="fas fa-info-circle text-pink"></i> Tip: You can provide either text explanation, code solution, or both.
+        </div>
+        <button id="btnSubmitAnswer" class="btn btn-cyber-submit">
+            <span id="btnText">Submit Answer 🚀</span>
+            <span id="btnLoader" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+    </div>
+</div>
+
+<style>
+    :root {
+        /* 🎨 Aapki Sign-In Page Vali Pure Custom Theme Tokens */
+        --cyber-bg: #090d16;
+        --dark-void: #0d0e12; /* Aapka provided pure card BG */
+        --glass-bg: rgba(13, 14, 18, 0.85); /* Translucent variation of your card BG */
+        --glass-border: rgba(217, 70, 239, 0.15);
+        --pink-glow: #d946ef; /* Bright Magenta Pink */
+        --purple-accent: #a855f7; /* Cosmic Deep Purple */
+
+        --text-pure: #ffffff;
+        --text-bright: #f1f5f9;
+        --text-dim: #94a3b8;
+        --text-muted: #64748b;
+    }
+
+    body {
+        background: radial-gradient(circle at 50% 0%, #151026, var(--cyber-bg)) !important;
+        color: var(--text-bright);
+        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .interview-live-wrapper {
+        max-width: 1500px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    /* 🔮 Glowing Pink Glassmorphism Panels */
+    .glass-panel {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 70, 239, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .glass-panel:hover {
+            border-color: rgba(217, 70, 239, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(217, 70, 239, 0.2);
+        }
+
+    /* Top Stats Monitor Bar - Pink Glowing Interface Line */
+    .monitor-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        border-bottom: 2px solid rgba(217, 70, 239, 0.35);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 25px rgba(217, 70, 239, 0.15);
+    }
+
+    .system-title {
+        color: var(--text-pure);
+        font-weight: 800 !important;
+        letter-spacing: -0.3px;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+    }
+
+    .system-subtitle {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        margin-top: 3px;
+    }
+
+    /* ⚡ Neon Pink Pulse Indicator Grid */
+    .pulse-indicator {
+        width: 12px;
+        height: 12px;
+        background-color: var(--pink-glow);
+        border-radius: 50%;
+        box-shadow: 0 0 12px var(--pink-glow);
+        animation: cyber-pulse 2s infinite;
+    }
+
+    @@keyframes cyber-pulse {
+        0%
+
+    {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(217, 70, 239, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(217, 70, 239, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(217, 70, 239, 0);
+    }
+
+    }
+
+    .interview-split-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        align-items: stretch;
+    }
+
+    .grid-column {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    /* 🔥 Ultra Lighting Section Tags */
+    .panel-section-tag {
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--pink-glow);
+        margin-bottom: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-shadow: 0 0 12px rgba(217, 70, 239, 0.5);
+    }
+
+    .tag-description {
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        margin-top: -4px;
+        margin-bottom: 16px;
+        line-height: 1.4;
+    }
+
+    .question-viewer {
+        border-left: 4px solid var(--pink-glow);
+        background: linear-gradient(90deg, rgba(217, 70, 239, 0.04) 0%, transparent 100%), var(--glass-bg);
+        box-shadow: -10px 0 25px -10px var(--pink-glow), 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .question-live-text {
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.6;
+        color: var(--text-pure);
+    }
+
+    .text-glow-muted {
+        color: var(--text-muted);
+        font-style: italic;
+        font-weight: 400;
+    }
+
+    /* Dark Space-Void Text Area matching Login Card */
+    .custom-glass-textarea {
+        background: #05060a;
+        border: 1px solid rgba(217, 70, 239, 0.2);
+        border-radius: 10px;
+        color: var(--text-bright);
+        padding: 18px;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        width: 100%;
+        flex-grow: 1;
+        min-height: 260px;
+        resize: none;
+        outline: none;
+        transition: all 0.25s ease;
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+        .custom-glass-textarea:focus {
+            border-color: var(--pink-glow);
+            box-shadow: 0 0 18px rgba(217, 70, 239, 0.35), inset 0 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+    /* Mac Style Editor Wrapper Customizing */
+    .editor-window-panel {
+        padding: 0 !important;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 540px;
+    }
+
+    .editor-top-mac-bar {
+        background: #090a0e;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(217, 70, 239, 0.15);
+    }
+
+    .mac-dots {
+        display: flex;
+        gap: 7px;
+    }
+
+    .mac-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+        .mac-dot.red {
+            background: #ff5f56;
+        }
+
+        .mac-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .mac-dot.green {
+            background: #27c93f;
+        }
+
+    .editor-file-tab {
+        font-family: 'Consolas', 'Fira Code', monospace;
+        font-size: 0.8rem;
+        color: var(--text-bright);
+        font-weight: 600;
+    }
+
+    .editor-body-wrapper {
+        flex-grow: 1;
+        background: #1e1e1e;
+        position: relative;
+    }
+
+    #monacoEditorContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* 🪐 Cyber Control Panel Footer */
+    .action-footer-panel {
+        margin-top: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(13, 14, 18, 0.95);
+        border: 1px solid rgba(217, 70, 239, 0.2);
+        padding: 18px 26px;
+        border-radius: 14px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(217, 70, 239, 0.05);
+    }
+
+    .helper-text-tip {
+        font-size: 0.88rem;
+        color: var(--text-dim);
+    }
+
+    /* 🚀 Synthwave Purple/Pink Gradient Submit Button with Glow */
+    .btn-cyber-submit {
+        background: linear-gradient(135deg, var(--pink-glow), var(--purple-accent));
+        color: var(--text-pure);
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 12px 38px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 0 18px rgba(217, 70, 239, 0.4);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .btn-cyber-submit:hover {
+            background: linear-gradient(135deg, var(--purple-accent), var(--pink-glow));
+            box-shadow: 0 0 28px rgba(217, 70, 239, 0.7);
+            transform: translateY(-1px);
+            color: var(--text-pure);
+        }
+
+        .btn-cyber-submit:active {
+            transform: scale(0.98);
+        }
+
+    /* Overrides for Status Badges */
+    .bg-dark-pink {
+        background: rgba(217, 70, 239, 0.12);
+        border: 1px solid rgba(217, 70, 239, 0.3);
+    }
+
+    .text-pink {
+        color: #f472b6 !important;
+        text-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
+    }
+
+    @@media (max-width: 1024px) {
+        .interview-split-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .editor-window-panel {
+        min-height: 420px;
+    }
+
+    }
+</style>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs/loader.min.js"></script>
+
+    <script>
+        var windowEditorInstance = null;
+        var defaultTemplate = '// Type your programming logic or function implementation here...';
+
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.39.0/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            windowEditorInstance = monaco.editor.create(document.getElementById('monacoEditorContainer'), {
+                value: defaultTemplate + '\n\n',
+                language: 'csharp',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: false },
+                padding: { top: 15 }
+            });
+        });
+
+        $(document).ready(function () {
+            loadQuestion("", "");
+
+            $("#btnSubmitAnswer").click(function () {
+                var answerText = $("#userAnswer").val() ? $("#userAnswer").val().trim() : "";
+                var codeText = "";
+
+                if (windowEditorInstance) {
+                    codeText = windowEditorInstance.getValue().trim();
+                }
+
+                var cleanCode = codeText.replace(/\s+/g, '');
+                var cleanTemplate = defaultTemplate.replace(/\s+/g, '');
+
+                if (cleanCode === cleanTemplate || codeText === "") {
+                    codeText = "";
+                }
+
+                if (answerText === "" && codeText === "") {
+                    alert("Pehle kisi aik side par apna jawab toh likho boss! Ya text explanation likhein ya code editor mein code.");
+                    return;
+                }
+
+                setLoading(true);
+                $("#questionBox").html('<span class="text-glow-muted">Ai Check you question please wait... 🤖⏳</span>');
+
+                loadQuestion(answerText, codeText);
+            });
+
+            function loadQuestion(ans, code) {
+                $.ajax({
+                    url: '/Interview/GetAIQuestion',
+                    type: 'POST',
+                    data: {
+                        previousAnswer: ans,
+                        previousCodeAnswer: code
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.isCompleted) {
+                                window.location.href = response.redirectUrl;
+                            } else {
+                                $("#questionBox").text(response.data);
+                                $("#userAnswer").val("");
+                                if (windowEditorInstance) {
+                                    windowEditorInstance.setValue(defaultTemplate + '\n\n');
+                                }
+                                $("#badgeContainer").html('<span class="badge bg-dark-pink text-pink question-counter-badge">Question ' + response.currentCount + ' / ' + response.totalCount + '</span>');
+                            }
+                        } else {
+                            alert(response.error);
+                        }
+                    },
+                    error: function () {
+                        $("#questionBox").html('<span class="text-danger">Connection Failed! Please recheck local hosting endpoint. ❌</span>');
+                    },
+                    complete: function () {
+                        setLoading(false);
+                    }
+                });
+            }
+
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    $("#btnText").text("Evaluating Pipeline...");
+                    $("#btnLoader").removeClass("d-none");
+                    $("#btnSubmitAnswer").prop("disabled", true);
+                } else {
+                    $("#btnText").text("Submit Answer 🚀");
+                    $("#btnLoader").addClass("d-none");
+                    $("#btnSubmitAnswer").prop("disabled", false);
+                }
+            }
+        });
+    </script>
+}

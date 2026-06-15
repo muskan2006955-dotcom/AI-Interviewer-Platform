@@ -1,0 +1,570 @@
+﻿@model IEnumerable<AI_Interviwer.Models.InterviewSession>
+
+@{
+    ViewData["Title"] = "AI Interview Dashboard";
+    var pastSessions = Model?.OrderByDescending(s => s.CreatedAt).ToList() ?? new List<AI_Interviwer.Models.InterviewSession>();
+}
+
+<!-- 🎭 SWEETALERT2 STYLES & INTERPOLATION -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+    :root {
+        --cyber-bg: #090d16;
+        --dark-void: #0d0e12;
+        --glass-bg: rgba(13, 14, 18, 0.85);
+        --glass-border: rgba(217, 70, 239, 0.15);
+        --pink-glow: #d946ef;
+        --purple-accent: #a855f7;
+        --text-bright: #ffffff;
+        --text-dim: #94a3b8;
+        --text-muted: #64748b;
+        --cyber-danger: #ff4a4a;
+    }
+
+    body {
+        background: radial-gradient(circle at 50% 0%, #151026, var(--cyber-bg)) !important;
+        color: var(--text-bright);
+        font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .dashboard-viewport-container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* 🔮 High-Fidelity Pink Tinted Glass Panels */
+    .glass-panel {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(217, 70, 239, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .glass-panel:hover {
+            border-color: rgba(217, 70, 239, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(217, 70, 239, 0.2);
+        }
+
+    .welcome-header-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        border-left: 4px solid var(--pink-glow);
+        box-shadow: -10px 0 25px -10px var(--pink-glow), 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .stats-pill-group {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .stat-badge {
+        background: #05060a;
+        border: 1px solid rgba(217, 70, 239, 0.3);
+        padding: 8px 18px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 0 15px rgba(217, 70, 239, 0.1);
+    }
+
+    .stat-num {
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1;
+        text-shadow: 0 0 12px rgba(217, 70, 239, 0.6);
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-top: 5px;
+        letter-spacing: 1px;
+    }
+
+    .btn-cyber-logout {
+        color: var(--cyber-danger);
+        background: rgba(255, 74, 74, 0.05);
+        border: 1px solid rgba(255, 74, 74, 0.25);
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .btn-cyber-logout:hover {
+            background: var(--cyber-danger);
+            color: #ffffff;
+            box-shadow: 0 0 22px rgba(255, 74, 74, 0.45);
+            border-color: var(--cyber-danger);
+        }
+
+    .config-panel-title {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--pink-glow);
+        margin-bottom: 18px;
+        font-weight: 700;
+        text-shadow: 0 0 10px rgba(217, 70, 239, 0.4);
+    }
+
+    .horizontal-form-grid {
+        display: grid;
+        grid-template-columns: 2.2fr 1.5fr 1.3fr 1.8fr 1.5fr;
+        gap: 16px;
+        align-items: flex-end;
+    }
+
+    .form-item-tag {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        display: inline-block;
+    }
+
+    .custom-cyber-select {
+        background-color: #05060a !important;
+        border: 1px solid rgba(217, 70, 239, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        padding: 12px 14px !important;
+        font-size: 0.95rem;
+        outline: none;
+        width: 100%;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .custom-cyber-select:focus {
+            border-color: var(--pink-glow) !important;
+            box-shadow: 0 0 15px rgba(217, 70, 239, 0.3) !important;
+        }
+
+        .custom-cyber-select option {
+            background-color: #0d0e12;
+            color: #ffffff;
+        }
+
+    .btn-cyber-launch {
+        background: linear-gradient(135deg, var(--pink-glow), var(--purple-accent));
+        color: #ffffff;
+        font-weight: 700;
+        padding: 13px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        box-shadow: 0 0 15px rgba(217, 70, 239, 0.3);
+        transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+        .btn-cyber-launch:hover {
+            background: linear-gradient(135deg, var(--purple-accent), var(--pink-glow));
+            box-shadow: 0 0 25px rgba(217, 70, 239, 0.6);
+            color: #ffffff;
+        }
+
+    .btn-cyber-clear-all {
+        background: rgba(255, 74, 74, 0.08);
+        color: var(--cyber-danger);
+        border: 1px solid rgba(255, 74, 74, 0.3);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: all 0.25s ease;
+    }
+
+        .btn-cyber-clear-all:hover {
+            background: var(--cyber-danger);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 74, 74, 0.5);
+            border-color: var(--cyber-danger);
+        }
+
+    .history-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #ffffff;
+    }
+
+    .table-responsive-wrapper {
+        border: 1px solid rgba(217, 70, 239, 0.15);
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(5, 6, 10, 0.4);
+    }
+
+    .cyber-data-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+        .cyber-data-table th {
+            background: #05060a;
+            padding: 14px 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(217, 70, 239, 0.3);
+        }
+
+        .cyber-data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.95rem;
+            vertical-align: middle;
+        }
+
+    .clickable-session-row {
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+
+        .clickable-session-row:hover {
+            background-color: rgba(217, 70, 239, 0.04);
+        }
+
+            .clickable-session-row:hover .session-id-cell {
+                color: var(--pink-glow);
+                text-shadow: 0 0 8px rgba(217, 70, 239, 0.4);
+            }
+
+            .clickable-session-row:hover .transition-arrow {
+                transform: translateX(6px);
+                color: var(--pink-glow) !important;
+                text-shadow: 0 0 8px var(--pink-glow);
+            }
+
+    .session-id-cell {
+        font-family: monospace;
+        color: var(--text-dim);
+        font-weight: 600;
+    }
+
+    .btn-cyber-row-delete {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-muted);
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .btn-cyber-row-delete:hover {
+            background: rgba(255, 74, 74, 0.15);
+            color: var(--cyber-danger);
+            border-color: rgba(255, 74, 74, 0.5);
+            box-shadow: 0 0 10px rgba(255, 74, 74, 0.3);
+        }
+
+    .context-type-pill {
+        background: rgba(217, 70, 239, 0.05);
+        border: 1px dashed rgba(217, 70, 239, 0.4);
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        color: #e5e7eb;
+        display: inline-block;
+    }
+
+    .action-cell-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--pink-glow);
+    }
+
+    .border-dashed-pink {
+        border: 2px dashed rgba(217, 70, 239, 0.3);
+        border-radius: 12px;
+        background: rgba(5, 6, 10, 0.2);
+    }
+
+    .text-pink {
+        color: #f472b6 !important;
+        text-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
+    }
+
+    /* 🧠 Cyber SweetAlert Theme Overrides */
+    .cyber-swal-popup {
+        background: rgba(13, 14, 18, 0.95) !important;
+        border: 1px solid var(--pink-glow) !important;
+        box-shadow: 0 0 30px rgba(217, 70, 239, 0.25) !important;
+        border-radius: 16px !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .cyber-swal-title {
+        color: #ffffff !important;
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: 700 !important;
+    }
+
+    .cyber-swal-html {
+        color: var(--text-dim) !important;
+        font-size: 0.95rem !important;
+    }
+
+    @@media (max-width: 1200px) {
+        .horizontal-form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .action-btn-align {
+            grid-column: span 2;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .horizontal-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-btn-align {
+            grid-column: span 1;
+        }
+
+        .welcome-header-panel {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="dashboard-viewport-container">
+
+    <!-- Welcome Banner -->
+    <div class="glass-panel welcome-header-panel">
+        <div class="welcome-meta">
+            <h2 class="text-white fw-bold mb-1">Welcome back, <span class="text-pink">@ViewBag.UserName</span> 🤖</h2>
+            <p class="text-dim mb-0">Configure a new workspace or analyze your historical core engineering evaluation logs.</p>
+        </div>
+        <div class="stats-pill-group">
+            <div class="stat-badge">
+                <span class="stat-num text-pink">@pastSessions.Count</span>
+                <span class="stat-label">Total Sessions</span>
+            </div>
+            <a asp-controller="Account" asp-action="Logout" class="btn-cyber-logout">
+                <i class="fas fa-power-off"></i> Terminate Session
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Configuration Engine Panel -->
+    <div class="glass-panel horizontal-config-panel">
+        <h5 class="config-panel-title"><i class="fas fa-sliders-h text-pink"></i> Quick Setup Workspace</h5>
+
+        <form asp-action="StartSession" method="post" class="horizontal-form-grid">
+            <div class="form-item-wrapper">
+                <label class="form-item-tag"><i class="fas fa-briefcase"></i> Target Job Role</label>
+                <select name="role" class="custom-cyber-select" required>
+                    <option value="" disabled selected>Select Role...</option>
+                    <option value=".NET Core Developer">.NET Core Developer</option>
+                    <option value="PHP Laravel Developer">PHP Laravel Developer</option>
+                    <option value="Full-Stack Web Developer">Full-Stack Web Developer</option>
+                    <option value="SQA Engineer">SQA Engineer (Testing)</option>
+                    <option value="Database Administrator">Database Administrator</option>
+                </select>
+            </div>
+
+            <div class="form-item-wrapper">
+                <label class="form-item-tag"><i class="fas fa-layer-group"></i> Experience</label>
+                <select name="level" class="custom-cyber-select" required>
+                    <option value="" disabled selected>Select Level...</option>
+                    <option value="Beginner / Fresher">Beginner / Fresher</option>
+                    <option value="Intermediate (1-2 Yrs)">Intermediate (1-2 Yrs)</option>
+                    <option value="Senior Developer">Senior Developer</option>
+                </select>
+            </div>
+
+            <div class="form-item-wrapper">
+                <label class="form-item-tag"><i class="fas fa-question-circle"></i> Length</label>
+                <select name="totalLength" class="custom-cyber-select" required>
+                    <option value="3">3 Questions (Quick)</option>
+                    <option value="5" selected>5 Questions (Standard)</option>
+                    <option value="10">10 Questions (Deep Dive)</option>
+                </select>
+            </div>
+
+            <div class="form-item-wrapper">
+                <label class="form-item-tag"><i class="fas fa-brain"></i> Context Round</label>
+                <select name="interviewType" class="custom-cyber-select" required>
+                    <option value="Technical Coding">Technical & Coding Syntax</option>
+                    <option value="Behavioral & HR">Behavioral & HR Round</option>
+                    <option value="Mixed (Technical + HR)">Mixed (Full Mock)</option>
+                </select>
+            </div>
+
+            <div class="form-item-wrapper action-btn-align">
+                <button type="submit" class="btn btn-cyber-launch w-100">
+                    Launch Pipeline <i class="fas fa-rocket ms-1"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Analytics Log Engine Matrix -->
+    <div class="glass-panel session-history-panel">
+        <div class="history-panel-header d-flex justify-content-between align-items-center mb-4">
+            <h4 class="history-title mb-0"><i class="fas fa-history text-pink"></i> Historical Performance Analytics</h4>
+
+            @if (pastSessions.Any())
+            {
+                <form id="clearAllForm" asp-action="ClearAllHistory" method="post">
+                    <button type="button" class="btn btn-cyber-clear-all" onclick="confirmClearAll(event)">
+                        <i class="fas fa-trash-alt me-1"></i> Wipe All Logs
+                    </button>
+                </form>
+            }
+        </div>
+
+        @if (!pastSessions.Any())
+        {
+            <div class="text-center py-5 border-dashed-pink">
+                <i class="fas fa-folder-open text-dim mb-3" style="font-size: 2.5rem;"></i>
+                <p class="text-white mb-1 fw-bold">No interview execution logs found.</p>
+                <p class="text-muted small">Configure and launch your first AI interview session from the configuration array above.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive-wrapper">
+                <table class="cyber-data-table">
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Target Domain Role</th>
+                            <th>Interview Focus</th>
+                            <th>Date Attempted</th>
+                            <th class="text-center">Status / Access</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var session in pastSessions)
+                        {
+                            <tr class="clickable-session-row" onclick="window.location.href='@Url.Action("InterviewResult", "Interview", new { id = session.SessionId })'">
+                                <td class="session-id-cell">#0@(session.SessionId)</td>
+                                <td>
+                                    <div class="fw-bold text-white">@session.Role</div>
+                                    <div class="text-dim small-badge">@session.Level</div>
+                                </td>
+                                <td>
+                                    <span class="context-type-pill"><i class="fas fa-microchip text-pink me-1"></i> @session.InterviewType</span>
+                                </td>
+                                <td class="text-dim font-monospace">
+                                    @(session.CreatedAt != null ? session.CreatedAt.Value.ToString("dd MMM yyyy, hh:mm tt") : "Date Logging Disabled")
+                                </td>
+                                <td class="text-center">
+                                    <div class="action-cell-trigger">
+                                        <span class="view-report-text">View Analytics</span>
+                                        <i class="fas fa-chevron-right text-pink ms-1 transition-arrow"></i>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <form id="deleteForm-@session.SessionId" asp-action="DeleteSession" asp-route-id="@session.SessionId" method="post" style="display:inline;" onclick="event.stopPropagation();">
+                                        <button type="button" class="btn-cyber-row-delete" title="Delete Session" onclick="confirmDeleteRow(event, '@session.SessionId', '@session.Role')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- 👾 SWEETALERT2 EXECUTION SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Wipe All Logs Control
+    function confirmClearAll(event) {
+        event.preventDefault();
+
+        SweetAlertCustom.fire({
+            title: 'TERMINATE ALL LOGS?',
+            html: "Are you absolutely sure you want to clear your entire execution history? <br><b class='text-danger'>This procedure cannot be undone!</b>",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '⚡ WIPE LOGS',
+            cancelButtonText: 'CANCEL SYSTEM',
+            confirmButtonColor: '#ff4a4a',
+            cancelButtonColor: '#334155'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('clearAllForm').submit();
+            }
+        });
+    }
+
+    // 2. Delete Single Session Row Control
+    function confirmDeleteRow(event, sessionId, roleName) {
+        event.preventDefault();
+        event.stopPropagation(); // Double safety to prevent tr click routing
+
+        SweetAlertCustom.fire({
+            title: 'PURGE SESSION LOG?',
+            html: `Are you sure you want to delete <b class='text-pink'>#0${sessionId}</b> (${roleName}) evaluation data?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'PURGE',
+            cancelButtonText: 'ABORT',
+            confirmButtonColor: '#ff4a4a',
+            cancelButtonColor: '#334155'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`deleteForm-${sessionId}`).submit();
+            }
+        });
+    }
+
+    // 🧬 Cyberpunk Universal Alert Customization Profile
+    const SweetAlertCustom = Swal.mixin({
+        customClass: {
+            popup: 'cyber-swal-popup',
+            title: 'cyber-swal-title',
+            htmlContainer: 'cyber-swal-html'
+        },
+        background: '#0d0e12',
+        buttonsStyling: true
+    });
+</script>
