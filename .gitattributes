@@ -1,0 +1,3 @@
+AI_Interviwer/wwwroot/lib/* linguist-vendored
+*.min.js linguist-vendored
+*.min.css linguist-vendored
