@@ -1,6 +1,4 @@
-AI_Interviwer/wwwroot/lib/* linguist-vendored
-*.min.js linguist-vendored
-*.min.css linguist-vendored
-*.html linguist-detectable=false
-*.css linguist-detectable=false
-*.js linguist-detectable=false
+*.html linguist-documentation=true
+*.css linguist-documentation=true
+*.js linguist-documentation=true
+wwwroot/**/* linguist-vendored
